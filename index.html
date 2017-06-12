@@ -102,6 +102,14 @@
         console.log("starting x is " + number);
     });
 
+    socket.on('current question',function(data){
+
+        question = data[0];
+        answer = data[1];
+        document.getElementById("question").innerHTML = data[0];
+
+    });
+
     socket.on('r team point',function(data){
         sprite.x = sprite.x + 30;
         question = data[0];

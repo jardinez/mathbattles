@@ -5,3 +5,9 @@
 !.elasticbeanstalk/*.global.yml
 node_modules/
 .idea/*
+
+.idea/workspace.xml
+
+.idea/workspace.xml
+
+*.xml

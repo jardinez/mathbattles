@@ -127,6 +127,9 @@ io.on('connection', function(socket){
         //trigger a particular even on this particular client object
         socket.emit('your number',counter);
         socket.emit('starting x',x);
+        q_a = [questions[question_counter],answers[question_counter]];
+        socket.emit('current question',q_a);
+        
         //io.emit()
     });
     
