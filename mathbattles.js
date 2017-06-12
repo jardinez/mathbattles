@@ -94,9 +94,13 @@ io.on('connection', function(socket){
         if (msg == 'r' + answers[question_counter]){
             console.log("someone typed a correct answer");
             question_counter += 1;
+            if (question_counter > answers.length - 1){
+                question_counter = 0;
+            }
             q_a = [questions[question_counter],answers[question_counter]];
             io.emit('r team point', q_a);
             x += 30;
+
 
             if (x>599){
                 io.emit('chat message', "Team 1 Wins!!!!");
@@ -107,6 +111,9 @@ io.on('connection', function(socket){
         if (msg == 'l' + answers[question_counter]){
             console.log("someone typed a correct answer");
             question_counter += 1;
+            if (question_counter > answers.length - 1){
+                question_counter = 0;
+            }
             q_a = [questions[question_counter],answers[question_counter]];
             io.emit('l team point', q_a);
             x -= 30;
