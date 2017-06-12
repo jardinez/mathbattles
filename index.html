@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Typing Battles</title>
+    <title>Math Battles</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font: 13px Helvetica, Arial; }
@@ -17,7 +17,7 @@
 <body>
 <h2>MASTER PEMDAS</h2>
 <h2>Type correct answer. Be careful of the order of operations. Team 1 anwer must include letter 'l' and team 2 must include letter 'r'. For example, Q: 1+0= __? Answer :'L1' or 'R1'.</h2>
-<h2> QUESTION: 2+2x0= ___ ? </h2>
+<h2 id="question"> QUESTION: 2+2x0= ___ ? </h2>
 <ul id="messages"></ul>
 <form action="">
     <input id="m" type="text" value="" autocomplete="off" /><button>Send</button>
@@ -43,6 +43,8 @@
     var sprite;
     var game = new Phaser.Game(600, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render })
 
+    var answer = 2;
+    var question = " QUESTION: 2+2x0= ___ ? ";
     //beginFill(0xFF700B, 1);
     //var rectDivide = new Phaser.rect(295,0,10,600);
 
@@ -100,20 +102,28 @@
         console.log("starting x is " + number);
     });
 
-    socket.on('r2',function(data){
+    socket.on('r team point',function(data){
         sprite.x = sprite.x + 30;
+        question = data[0];
+        answer = data[1];
+        document.getElementById("question").innerHTML = data[0];
         console.log("sprite should be moving right");
+        console.log(data);
     });
 
-    socket.on('l2',function(data){
+    socket.on('l team point',function(data){
         sprite.x = sprite.x - 30;
+        question = data[0];
+        answer = data[1];
+        document.getElementById("question").innerHTML = data[0];
         console.log("sprite should be moving left");
+        console.log(data);
     });
 
     $('form').submit(function(){
         console.log($('#m').val());
 
-        if ($('#m').val() == 'l2' || $('#m').val() == 'r2' || $('#m').val() == 'L2' || $('#m').val() == 'R2') {
+        if ($('#m').val() == 'l' + answer || $('#m').val() == 'r' + + answer || $('#m').val() == 'L' + + answer || $('#m').val() == 'R' + answer) {
             socket.emit('chat message', $('#m').val().toLowerCase());
         }
         $('#m').val('');
@@ -123,6 +133,8 @@
         $('#messages').append($('<li>').text(msg));
         if (msg == "Team 1 Wins!!!!" || msg == "Team 2 Wins!!!!"){
             sprite.x = 300;
+
+
         }
     });
 </script>

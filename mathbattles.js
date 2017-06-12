@@ -6,6 +6,13 @@
     //an HTTP server
 var app = require('express')();
 var counter = 0;
+var question_counter = 0;
+
+var questions = [" QUESTION: 2+2x0= ___ ? "," QUESTION: 2(2+2x0)= ___ ? "," QUESTION: 2(2+2x0)+3= ___ ? "];
+
+var answers = [2,4,7];
+
+var q_a = [questions[question_counter],answers[question_counter]];
 
 var hostname = '0.0.0.0';
 var port = process.env.PORT || 3000;
@@ -84,20 +91,24 @@ io.on('connection', function(socket){
         
         //i think because this is coming from the server it goes to everyone
         io.emit('chat message', msg);
-        if (msg == 'r2'){
-            console.log("someone typed right");
-            io.emit('r2', "someone typed right");
+        if (msg == 'r' + answers[question_counter]){
+            console.log("someone typed a correct answer");
+            question_counter += 1;
+            q_a = [questions[question_counter],answers[question_counter]];
+            io.emit('r team point', q_a);
             x += 30;
-            
+
             if (x>599){
                 io.emit('chat message', "Team 1 Wins!!!!");
                 x=300;
                 //console.log("right wins");
             }
         }
-        if (msg == 'l2'){
-            console.log("someone typed left");
-            io.emit('l2', "someone typed left");
+        if (msg == 'l' + answers[question_counter]){
+            console.log("someone typed a correct answer");
+            question_counter += 1;
+            q_a = [questions[question_counter],answers[question_counter]];
+            io.emit('l team point', q_a);
             x -= 30;
             if (x<1){
                 io.emit('chat message', "Team 2 Wins!!!!");
