@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Typing Battles</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { top: 400; padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+</head>
+<body>
+<h2>MASTER PEMDAS</h2>
+<h2>Type correct answer. Be careful of the order of operations. Team 1 anwer must include letter 'l' and team 2 must include letter 'r'. For example, Q: 1+0= __? Answer :'L1' or 'R1'.</h2>
+<h2> QUESTION: 2+2x0= ___ ? </h2>
+<ul id="messages"></ul>
+<form action="">
+    <input id="m" type="text" value="" autocomplete="off" /><button>Send</button>
+</form>
+
+<script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
+<script   src="https://code.jquery.com/jquery-3.1.1.js" crossorigin="anonymous"></script>
+
+<!--this is a client side javascript package-->
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+
+    window.onload = function() {
+        var m = document.getElementById('m');
+        m.onpaste = function(e) {
+            e.preventDefault();
+        }
+    }
+
+    //var x = 0;
+    var sprite;
+    var game = new Phaser.Game(600, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render })
+
+    //beginFill(0xFF700B, 1);
+    //var rectDivide = new Phaser.rect(295,0,10,600);
+
+    //reserved function names defined by phaser
+
+    function preload() {
+
+        game.load.baseURL = 'http://examples.phaser.io/assets/';
+        game.load.crossOrigin = 'anonymous';
+
+        game.load.image('phaser', 'sprites/phaser-dude.png');
+
+    }
+
+    function create() {
+
+        sprite = game.add.sprite(300, 0, 'phaser');
+
+    }
+
+    function update() {
+
+    }
+
+    function render() {
+
+    }
+
+    //not sure what this means, connect with the global io
+    //i guess this is a separate socket object in the client
+
+    //this is a different object than the server object
+    //this is a specific io client object
+    var socket = io();
+
+    var mynumber;
+
+    //this shows what to do client side, when these events occur
+    socket.on('connect',function(data){
+
+        //when i connect as a client, send a message to server saying i joined
+        socket.emit('join','i am joining now');
+    });
+
+    socket.on('your number',function(data){
+        //socket.emit('join','i am joining now');
+        number = data;
+        console.log("my number is " + number);
+    });
+
+    socket.on('starting x',function(data){
+
+        setTimeout(function(){ sprite.x = data; }, 500);
+
+        console.log("starting x is " + number);
+    });
+
+    socket.on('r2',function(data){
+        sprite.x = sprite.x + 30;
+        console.log("sprite should be moving right");
+    });
+
+    socket.on('l2',function(data){
+        sprite.x = sprite.x - 30;
+        console.log("sprite should be moving left");
+    });
+
+    $('form').submit(function(){
+        console.log($('#m').val());
+
+        if ($('#m').val() == 'l2' || $('#m').val() == 'r2' || $('#m').val() == 'L2' || $('#m').val() == 'R2') {
+            socket.emit('chat message', $('#m').val().toLowerCase());
+        }
+        $('#m').val('');
+        return false;
+    });
+    socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+        if (msg == "Team 1 Wins!!!!" || msg == "Team 2 Wins!!!!"){
+            sprite.x = 300;
+        }
+    });
+</script>
+
+</body>
+</html>
