@@ -99,11 +99,11 @@ io.on('connection', function(socket){
             }
             q_a = [questions[question_counter],answers[question_counter]];
             io.emit('r team point', q_a);
-            x += 30;
+            x += 100;
 
 
             if (x>599){
-                io.emit('chat message', "Team 1 Wins!!!!");
+                io.emit('chat message', "Team 2 Wins!!!!");
                 x=300;
                 //console.log("right wins");
             }
@@ -116,9 +116,9 @@ io.on('connection', function(socket){
             }
             q_a = [questions[question_counter],answers[question_counter]];
             io.emit('l team point', q_a);
-            x -= 30;
+            x -= 100;
             if (x<1){
-                io.emit('chat message', "Team 2 Wins!!!!");
+                io.emit('chat message', "Team 1 Wins!!!!");
                 x=300;
             }
         }
